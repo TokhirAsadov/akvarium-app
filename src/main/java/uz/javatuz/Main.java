@@ -7,7 +7,54 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello World");
+        Random random = new Random();
+
+        // Akvariumga o`lcham berish
+        int length = random.nextInt(50) + 50; // Random length between 50 and 100
+        int width = random.nextInt(30) + 30;  // Random width between 30 and 60
+        System.out.println("Creating an aquarium with dimensions: " + length + "x" + width);
+
+        // Erkak va urg'ochi baliqlar sonini aniqlash
+        int numMales = random.nextInt(10) + 5;   // Random number of males between 5 and 14
+        int numFemales = random.nextInt(8) + 4;  // Random number of females between 4 and 11
+        System.out.println("Adding " + numMales + " male and " + numFemales + " female fish to the aquarium.");
+
+        // Shared list and lock for fish in the aquarium
+        List<Fish> aquarium = Collections.synchronizedList(new ArrayList<>());
+        Lock aquariumLock = new ReentrantLock();
+
+        // Create a thread pool for fish
+        ExecutorService executor = Executors.newFixedThreadPool(numMales + numFemales);
+        List<Future<?>> futures = new ArrayList<>();
+
+        // Create and start threads for each male fish
+        for (int i = 1; i <= numMales; i++) {
+            int lifetime = random.nextInt(20) + 10; // Random lifetime between 10 and 29 days
+            Fish fish = new Fish("Male Fish " + i, "male", lifetime, aquarium, aquariumLock);
+            aquarium.add(fish);
+            futures.add(executor.submit(fish));
+        }
+
+        // Create and start threads for each female fish
+        for (int i = 1; i <= numFemales; i++) {
+            int lifetime = random.nextInt(20) + 10; // Random lifetime between 10 and 29 days
+            Fish fish = new Fish("Female Fish " + i, "female", lifetime, aquarium, aquariumLock);
+            aquarium.add(fish);
+            futures.add(executor.submit(fish));
+        }
+
+        // Wait for all fish threads to complete
+        for (Future<?> future : futures) {
+            try {
+                future.get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Shutdown the executor service
+        executor.shutdown();
+        System.out.println("All fish have passed away. Aquarium management program complete.");
     }
 }
 
