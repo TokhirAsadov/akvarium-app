@@ -43,4 +43,16 @@ class Fish implements Runnable {
     public void run() {
 
     }
+
+
+    private Fish findMate() {
+        for (Fish fish : aquarium) {
+            if (fish != this && fish.getGender().equals("female") && this.gender.equals("male")) {
+                return fish; // Return a female mate if found
+            } else if (fish != this && fish.getGender().equals("male") && this.gender.equals("female")) {
+                return fish; // Return a male mate if found
+            }
+        }
+        return null; // No mate found
+    }
 }
