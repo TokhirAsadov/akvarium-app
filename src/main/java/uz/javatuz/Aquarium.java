@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Aquarium {
-    private final int width;
-    private final int length;
-    private final List<Fish> fishes = new CopyOnWriteArrayList<>();  // Thread-safe list
+    private  int width;
+    private  int length;
+    private  List<Fish> fishes = new CopyOnWriteArrayList<>();  // Thread-safe list
 
     public Aquarium(int width, int length) {
         this.width = width;
